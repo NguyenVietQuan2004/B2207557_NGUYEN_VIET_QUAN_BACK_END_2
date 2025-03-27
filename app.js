@@ -1,7 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import contactRouter from './app/routes/contact.routes.js';
 import userRouter from './app/routes/user.routes.js';
 import nhanVienRouter from './app/routes/nhanvien.routes.js';
 import sachRouter from './app/routes/sach.routes.js';
@@ -14,7 +13,6 @@ dotenv.config();
 app.use(cors());
 app.use(express.json());
 
-app.use('/api/contacts', contactRouter);
 app.use('/api/user', userRouter);
 app.use('/api/nhanvien', nhanVienRouter);
 app.use('/api/sach', sachRouter);

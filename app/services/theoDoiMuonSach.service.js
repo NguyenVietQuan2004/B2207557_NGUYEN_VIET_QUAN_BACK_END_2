@@ -75,7 +75,7 @@ class TheoDoiMuonSachService {
     }
 
     await this.SachService.update(muonSach.masach, {
-      soquyen: sach.soquyen + 1,
+      $set: { soquyen: sach.soquyen + 1 },
     });
 
     return await this.TheoDoiMuonSach.deleteOne({ _id: new ObjectId(id) });

@@ -45,29 +45,29 @@ class NhanVienService {
     };
   }
 
-  async login({ email, password }) {
-    if (!email || !password) {
-      throw new Error('Cần nhập email và mật khẩu');
-    }
+  // async login({ email, password }) {
+  //   if (!email || !password) {
+  //     throw new Error('Cần nhập email và mật khẩu');
+  //   }
 
-    // Tìm nhân viên bằng email
-    const nhanvien = await this.NhanVien.findOne({ email });
-    if (!nhanvien) {
-      throw new Error('Thông tin đăng nhập không chính xác');
-    }
+  //   // Tìm nhân viên bằng email
+  //   const nhanvien = await this.NhanVien.findOne({ email });
+  //   if (!nhanvien) {
+  //     throw new Error('Thông tin đăng nhập không chính xác');
+  //   }
 
-    const isPasswordValid = await bcrypt.compare(password, nhanvien.password);
-    if (!isPasswordValid) {
-      throw new Error('Thông tin đăng nhập không chính xác');
-    }
+  //   const isPasswordValid = await bcrypt.compare(password, nhanvien.password);
+  //   if (!isPasswordValid) {
+  //     throw new Error('Thông tin đăng nhập không chính xác');
+  //   }
 
-    return {
-      id: nhanvien._id,
-      username: nhanvien.username,
-      chucvu: nhanvien.chucvu,
-      role: 'admin',
-    };
-  }
+  //   return {
+  //     id: nhanvien._id,
+  //     username: nhanvien.username,
+  //     chucvu: nhanvien.chucvu,
+  //     role: 'admin',
+  //   };
+  // }
 
   async getProfile(id) {
     if (!ObjectId.isValid(id)) {

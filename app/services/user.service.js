@@ -1,9 +1,9 @@
-import { ObjectId } from 'mongodb';
 import bcrypt from 'bcryptjs';
 
 class UserService {
   constructor(client) {
     this.User = client.db().collection('users');
+    this.NhanVien = client.db().collection('nhanviens');
   }
 
   extractUserData(payload) {
@@ -30,7 +30,7 @@ class UserService {
 
     const existingUser = await this.User.findOne({ email: user.email });
     if (existingUser) {
-      throw new Error('Email already in use');
+      throw new Error('Email đã được sử dụng');
     }
 
     user.password = await bcrypt.hash(user.password, 10);
@@ -55,24 +55,35 @@ class UserService {
       throw new Error('Email and password are required');
     }
 
-    // Tìm user theo email
-    const user = await this.User.findOne({ email });
-    if (!user) {
-      throw new Error('Invalid credentials');
+    let user = await this.User.findOne({ email });
+    if (user) {
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+        throw new Error('Thông tin đăng nhập không chính xác');
+      }
+      return {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        role: 'user',
+      };
     }
 
-    // Kiểm tra mật khẩu
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      throw new Error('Invalid credentials');
+    let admin = await this.NhanVien.findOne({ email });
+    if (admin) {
+      const isPasswordValid = await bcrypt.compare(password, admin.password);
+      if (!isPasswordValid) {
+        throw new Error('Thông tin đăng nhập không chính xác');
+      }
+      return {
+        id: admin._id,
+        username: admin.username,
+        chucvu: admin.chucvu,
+        role: 'admin',
+      };
     }
 
-    return {
-      id: user._id,
-      username: user.username,
-      email: user.email,
-      role: 'user',
-    };
+    throw new Error('Thông tin đăng nhập không hợp lệ');
   }
 
   // Lấy thông tin người dùng từ ID
