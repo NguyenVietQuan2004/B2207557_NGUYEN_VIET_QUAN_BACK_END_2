@@ -15,9 +15,6 @@ class SachService {
       createdAt: new Date(),
     };
 
-    Object.keys(sach).forEach(
-      (key) => sach[key] === undefined && delete sach[key],
-    );
     return sach;
   }
 
@@ -31,13 +28,29 @@ class SachService {
   }
 
   async getAll() {
-    return await this.Sach.find().toArray();
+    const a = await this.Sach.findOne();
+    const books = await this.Sach.find().toArray();
+
+    const booksWithPublisher = await this.Sach.aggregate([
+      {
+        $lookup: {
+          from: 'nhaxuatbans',
+          localField: 'manxb',
+          foreignField: '_id',
+          as: 'nxb_info',
+        },
+      },
+      { $unwind: { path: '$nxb_info', preserveNullAndEmptyArrays: true } }, // Để tránh mảng rỗng
+    ]).toArray();
+
+    return booksWithPublisher;
   }
 
   async getById(id) {
     if (!ObjectId.isValid(id)) return null;
     return await this.Sach.findOne({ _id: new ObjectId(id) });
   }
+
   async getByPublisherId(publisherId) {
     if (!ObjectId.isValid(publisherId)) return [];
     return await this.Sach.find({ manxb: new ObjectId(publisherId) }).toArray();
@@ -45,11 +58,20 @@ class SachService {
 
   async update(id, payload) {
     if (!ObjectId.isValid(id)) return null;
-    const sach = this.extractSachData(payload);
+
+    let updateData;
+
+    if (payload.$set || payload.$inc || payload.$push || payload.$pull) {
+      updateData = payload;
+    } else {
+      updateData = { $set: this.extractSachData(payload) };
+    }
+
     const result = await this.Sach.updateOne(
       { _id: new ObjectId(id) },
-      { $set: sach },
+      updateData,
     );
+
     return result.modifiedCount > 0;
   }
 

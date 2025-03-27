@@ -19,7 +19,6 @@ export const register = async (req, res, next) => {
 export const login = async (req, res, next) => {
   try {
     const userService = new UserService(mongodb.client);
-    console.log(req.body);
     const user = await userService.login(req.body);
     return res.status(200).json({
       message: 'Login successful',
@@ -44,7 +43,6 @@ export const getAllUsers = async (req, res, next) => {
   }
 };
 
-// http://localhost:5000/api/user/me?id=67d40a2c5bcc5516f26fcb33
 export const getProfile = async (req, res, next) => {
   try {
     const userService = new UserService(mongodb.client);

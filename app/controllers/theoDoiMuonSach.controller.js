@@ -25,7 +25,6 @@ export const getMuonSachByUserId = async (req, res, next) => {
     const theoDoiMuonSachService = new TheoDoiMuonSachService(mongodb.client);
     const bookService = new SachService(mongodb.client);
     // Lấy danh sách sách đã mượn theo userId
-    console.log(userId);
     const records = await theoDoiMuonSachService.getMuonSachByUserId(userId);
 
     if (!records || records.length === 0) {

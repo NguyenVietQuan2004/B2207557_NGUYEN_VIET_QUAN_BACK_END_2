@@ -30,7 +30,6 @@ export const login = async (req, res, next) => {
   }
 };
 
-// http://localhost:5000/api/nhanvien/me?id=67d40a2c5bcc5516f26fcb33
 export const getProfile = async (req, res, next) => {
   try {
     const nhanVienService = new NhanVienService(mongodb.client);

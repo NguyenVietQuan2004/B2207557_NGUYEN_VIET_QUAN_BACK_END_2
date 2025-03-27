@@ -25,7 +25,15 @@ export const getAllSach = async (req, res, next) => {
     return next(new ApiError(500, 'Lỗi khi lấy danh sách sách'));
   }
 };
-
+export const getSachByPublisherId = async (req, res, next) => {
+  try {
+    const sachService = new SachService(mongodb.client);
+    const sachs = await sachService.getByPublisherId(req.params.id);
+    return res.status(200).json({ data: sachs });
+  } catch (error) {
+    return next(new ApiError(500, 'Lỗi khi lấy danh sách sách'));
+  }
+};
 export const getSachById = async (req, res, next) => {
   try {
     const sachService = new SachService(mongodb.client);

@@ -12,9 +12,6 @@ class NhaXuatBanService {
       createdAt: new Date(),
     };
 
-    Object.keys(nhaxuatban).forEach(
-      (key) => nhaxuatban[key] === undefined && delete nhaxuatban[key],
-    );
     return nhaxuatban;
   }
 

@@ -18,14 +18,9 @@ class UserService {
       createdAt: new Date(),
     };
 
-    Object.keys(user).forEach(
-      (key) => user[key] === undefined && delete user[key],
-    );
-
     return user;
   }
 
-  // Đăng ký tài khoản
   async register(payload) {
     const user = this.extractUserData(payload);
 
@@ -33,16 +28,13 @@ class UserService {
       throw new Error('All fields are required');
     }
 
-    // Kiểm tra email đã tồn tại chưa
     const existingUser = await this.User.findOne({ email: user.email });
     if (existingUser) {
       throw new Error('Email already in use');
     }
 
-    // Hash mật khẩu
     user.password = await bcrypt.hash(user.password, 10);
 
-    // Tạo tài khoản
     const result = await this.User.insertOne(user);
     return {
       id: result.insertedId,
